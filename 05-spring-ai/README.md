@@ -1,4 +1,4 @@
-# Budgeting AI API — Assistente financeiro por voz
+# FinVoice — Assistente Financeiro Inteligente
 
 Projeto desenvolvido no desafio de Spring AI da DIO. A aplicação registra e consulta transações financeiras por endpoints REST ou comandos de voz. O áudio enviado pelo usuário é transcrito, interpretado pelo modelo e pode acionar casos de uso reais por Tool Calling. A resposta final é convertida para MP3.
 
