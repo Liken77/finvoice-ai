@@ -2,13 +2,9 @@ name: Spring AI Tests
 
 on:
   push:
-    paths:
-      - '05-spring-ai/**'
-      - '.github/workflows/spring-ai-tests.yml'
+    branches: [main]
   pull_request:
-    paths:
-      - '05-spring-ai/**'
-      - '.github/workflows/spring-ai-tests.yml'
+    branches: [main]
 
 permissions:
   contents: read
@@ -16,9 +12,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 05-spring-ai
 
     steps:
       - name: Baixar o código
