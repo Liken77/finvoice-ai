@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'com.h2database:h2'
 
     implementation platform("org.springframework.ai:spring-ai-bom:2.0.0-M4")
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
@@ -38,4 +39,15 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    exclude '**/*IT.class'
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Executa os testes que dependem da API da OpenAI.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    include '**/*IT.class'
+    shouldRunAfter tasks.named('test')
 }
