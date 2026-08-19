@@ -1,136 +1,48 @@
-# DIO Spring Boot Learning Track
+# FinVoice — Assistente Financeiro Inteligente
 
-This repository contains a DIO Spring Boot learning track organized as incremental modules.
+[![Spring AI Tests](https://github.com/Liken77/finvoice-ai/actions/workflows/spring-ai-tests.yml/badge.svg)](https://github.com/Liken77/finvoice-ai/actions/workflows/spring-ai-tests.yml)
 
-The track starts with architecture foundations and progressively moves through web APIs, data access, security, service integration, and AI-enabled workflows.
+O FinVoice é uma API de orçamento que registra, consulta e resume transações financeiras por endpoints REST e comandos de voz. A aplicação transcreve o áudio, interpreta a intenção com IA, executa casos de uso Java e devolve a resposta em MP3.
 
-<img width="2752" height="1536" alt="unnamed" src="https://github.com/user-attachments/assets/a7bcbe19-4d0c-4395-8696-8c64be22764f" />
+O código e a documentação completa estão no módulo [`05-spring-ai`](05-spring-ai/README.md).
 
-## Modules
+## Evolução implementada
 
-- [`00-domain-driven-design`](00-domain-driven-design/README.md)  
-  DDD foundations with a catalog domain and no web layer.
-- [`01-spring-web`](01-spring-web/README.md)  
-  REST API design with Spring Web and API documentation with Spring REST Docs.
-- [`02-spring-data`](02-spring-data/README.md)  
-  Data access in a multi-context application using MySQL, MongoDB, Redis, and PostgreSQL.
-- [`03-spring-security`](03-spring-security/README.md)  
-  Authentication and authorization with Spring Security in a proposal management API.
-- [`04-spring-cloud-openfeign`](04-spring-cloud-openfeign/README.md)  
-  External service integration (KYC/AML) using Spring Cloud OpenFeign and resilience patterns.
-- [`05-spring-ai`](05-spring-ai/README.md)  
-  Final project using Spring AI for speech-to-text, tool calling, and text-to-speech.
+- resumo financeiro com total geral e totais por categoria;
+- validação de valor, descrição e categoria das transações;
+- validação de arquivos de áudio enviados ao assistente;
+- respostas de erro padronizadas;
+- testes unitários sem consumo da API da OpenAI;
+- integração contínua com Java 25.
 
-## Recommended Study Order
+## Tecnologias
 
-1. [`00-domain-driven-design`](00-domain-driven-design/README.md)
-2. [`01-spring-web`](01-spring-web/README.md)
-3. [`02-spring-data`](02-spring-data/README.md)
-4. [`03-spring-security`](03-spring-security/README.md)
-5. [`04-spring-cloud-openfeign`](04-spring-cloud-openfeign/README.md)
-6. [`05-spring-ai`](05-spring-ai/README.md)
+- Java 25;
+- Spring Boot 4.0.5;
+- Spring AI 2.0.0-M4;
+- Spring Web e Spring Data JPA;
+- OpenAI;
+- MySQL e Docker Compose;
+- Gradle e JUnit.
 
----
-
-## Shared Architecture Guide
-
-The sections below consolidate architecture topics that are intentionally reused across modules.
-
-### DDD Layered Architecture
-
-Most modules follow the same conceptual split:
-
-```text
-domain/          -> business model, invariants, contracts
-application/     -> use cases, orchestration, application policies
-infrastructure/  -> adapters (HTTP, persistence, external clients, framework glue)
-```
-
-Why this matters:
-
-- `domain` stays focused on business language and rules, not framework details.
-- `application` coordinates domain behavior for specific user/business actions.
-- `infrastructure` can change (database, web transport, external APIs) without forcing core business rewrites.
-
-This separation reduces coupling and supports long-term maintainability.
-
-### Java Class vs Java Record in Domain Modeling
-
-A practical guideline used across the track:
-
-- Use `class` for entities/aggregates that have identity and may evolve behavior over time.
-- Use `record` for immutable value objects and DTO-style transport models.
-
-Design trade-offs:
-
-- `class` supports richer lifecycle behavior and controlled mutation.
-- `record` reduces boilerplate and makes immutability explicit.
-
-This distinction improves code intent and keeps domain concepts clearer.
-
-### Strong Typed Identifiers
-
-Instead of passing raw primitives (`UUID`, `String`) everywhere, modules wrap identifiers in explicit types such as `BookId`, `TaskId`, `ProposalId`, and `TransactionId`.
-
-Benefits:
-
-- Better compile-time safety (fewer accidental ID mix-ups).
-- More expressive signatures (`findById(TaskId id)` communicates intent).
-- Cleaner evolution path for ID rules and validation.
-
-### Repository Pattern
-
-The repository contract belongs to the business side, while technology-specific implementations stay in infrastructure.
-
-Pattern used in this repository:
-
-- Domain contract: `XxxRepository` in `domain/`.
-- Adapter implementation: JPA/in-memory/etc. in `infrastructure/`.
-
-Architectural impact:
-
-- Business logic depends on abstractions, not persistence frameworks.
-- Switching storage technology becomes an adapter change, not a domain rewrite.
-- Unit testing use cases becomes simpler with fake/mock repositories.
-
-### Use Cases and Clean Architecture
-
-Each use case models one business capability (for example, create task, list proposals, analyze company risk).
-
-Common flow:
-
-1. Controller/listener receives an external request.
-2. It calls one application use case.
-3. The use case orchestrates domain objects and repository/gateway contracts.
-4. Infrastructure adapters handle persistence or external integrations.
-
-Why this is important:
-
-- Strong single-responsibility boundaries.
-- Easier testability and refactoring.
-- Better readability of business workflows.
-
-### Docker Compose Support in Development
-
-Several modules include `compose.yml` and Spring Boot Docker Compose support.
-
-Typical local development role:
-
-- Start required infra services (database/cache/message dependencies).
-- Keep local setup reproducible for all students.
-- Reduce onboarding friction by standardizing environment dependencies.
-
-Note: exact behavior can vary by module configuration and runtime profile.
-
----
-
-## Quick Start
-
-Choose a module and run its local instructions:
+## Executando o projeto
 
 ```bash
-cd 01-spring-web
+cd 05-spring-ai
+docker compose up -d
+export OPENAI_API_KEY="sua-chave"
+./gradlew bootRun
+```
+
+Para executar somente os testes locais:
+
+```bash
+cd 05-spring-ai
 ./gradlew test
 ```
 
-For module-specific details, always check each module README from the links above.
+Consulte o [`README do projeto`](05-spring-ai/README.md) para ver os endpoints, exemplos de requisições, arquitetura e configurações necessárias.
+
+## Origem
+
+Projeto desenvolvido por Pedro Henrique Andrade como evolução do desafio de Spring AI da DIO. A estrutura inicial pertence à trilha [`dio-spring-boot-learning-track`](https://github.com/digitalinnovationone/dio-spring-boot-learning-track).
