@@ -8,7 +8,7 @@ plugins {
 
 group = 'dio'
 version = '0.0.1-SNAPSHOT'
-description = 'budgeting'
+description = 'API de orçamento com Spring Boot e Spring AI'
 
 java {
     toolchain {
