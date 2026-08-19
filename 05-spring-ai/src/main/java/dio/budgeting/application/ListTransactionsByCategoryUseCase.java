@@ -2,6 +2,7 @@ package dio.budgeting.application;
 
 import dio.budgeting.application.output.TransactionOutput;
 import dio.budgeting.domain.Category;
+import dio.budgeting.domain.InvalidTransactionException;
 import dio.budgeting.domain.TransactionRepository;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -19,6 +20,10 @@ public class ListTransactionsByCategoryUseCase {
 
     @Tool(name = "list-transactions-by-category", description = "Lista transações financeiras por categoria")
     public List<TransactionOutput> execute(@ToolParam(description = "Categoria de uma transação") Category category) {
+        if (category == null) {
+            throw new InvalidTransactionException("A categoria da consulta é obrigatória");
+        }
+
         return transactionRepository.findAllByCategory(category).stream().map(TransactionOutput::from).toList();
     }
 }
