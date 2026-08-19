@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:8080
+
+### Criar uma transação
+POST {{baseUrl}}/transactions
+Content-Type: application/json
+
+{
+  "description": "Compra no mercado",
+  "category": "GROCERIES",
+  "amount": 7050
+}
+
+### Consultar transações por categoria
+GET {{baseUrl}}/transactions/GROCERIES
+
+### Consultar resumo financeiro
+GET {{baseUrl}}/transactions/summary
+
+### Enviar comando de voz
+POST {{baseUrl}}/transactions/ai
+Content-Type: multipart/form-data; boundary=AudioBoundary
+
+--AudioBoundary
+Content-Disposition: form-data; name="file"; filename="comando.m4a"
+Content-Type: audio/mp4
+
+< ./src/test/resources/audio/recording-1.m4a
+--AudioBoundary--
